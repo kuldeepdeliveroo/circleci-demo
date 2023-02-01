@@ -39,6 +39,7 @@ jobs:
           name: Running the Node Container
           command: |
             node -v
+            exit 1
   Now-Complete:
     docker:
       - image: alpine:3.15
