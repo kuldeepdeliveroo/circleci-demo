@@ -1,25 +1,30 @@
 version: 2.1
+
+dockerhub_auth: &dockerhub_auth
+  auth:
+    username: kuldeepiitg
+    password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+
+hello_world_steps: &hello_world_steps
+  steps:
+    - run:
+        name: Saying Hello
+        command: |
+          echo 'Hello World!'
+          echo 'This is the delivery pipeline'
+
 jobs:
   # running commands on a basic image
   Hello-World:
     docker:
       - image: alpine:3.15
-        auth:
-          username: kuldeepiitg
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-    steps:
-      - run:
-          name: Saying Hello
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+        <<: *dockerhub_auth
+    <<: *hello_world_steps
   # fetching code from the repo
   Fetch-Code:
     docker:
       - image: cimg/base:2021.04
-        auth:
-          username: kuldeepiitg
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        <<: *dockerhub_auth
     steps:
       - checkout
       - run:
@@ -31,21 +36,16 @@ jobs:
   Using-Node:
     docker:
       - image: cimg/node:17.2
-        auth:
-          username: kuldeepiitg
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        <<: *dockerhub_auth
     steps:
       - run:
           name: Running the Node Container
           command: |
             node -v
-            exit 1
   Now-Complete:
     docker:
       - image: alpine:3.15
-        auth:
-          username: kuldeepiitg
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        <<: *dockerhub_auth
     steps:
       - run:
           name: Approval Complete
